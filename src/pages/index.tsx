@@ -2,13 +2,22 @@ import { Button, Box } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useInfiniteQuery } from 'react-query';
 
+import axios from 'axios';
 import { Header } from '../components/Header';
 import { CardList } from '../components/CardList';
 import { api } from '../services/api';
 import { Loading } from '../components/Loading';
 import { Error } from '../components/Error';
 
+type paraParamProps = {
+  pageParam: number;
+};
+
 export default function Home(): JSX.Element {
+  const fetchImages = ({ pageParam = 0 }) => {
+    return axios.get(`api/images?cursor=${pageParam}`);
+  };
+
   const {
     data,
     isLoading,
@@ -19,7 +28,10 @@ export default function Home(): JSX.Element {
   } = useInfiniteQuery(
     'images',
     // TODO AXIOS REQUEST WITH PARAM
-    ,
+    fetchImages,
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    }
     // TODO GET AND RETURN NEXT PAGE PARAM
   );
 
