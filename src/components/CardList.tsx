@@ -25,7 +25,7 @@ export function CardList({ cards }: CardsProps): JSX.Element {
   return (
     <>
       {/* TODO CARD GRID */}
-
+      <div>IMAGE</div>
       {/* TODO MODALVIEWIMAGE */}
     </>
   );
