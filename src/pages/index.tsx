@@ -20,21 +20,24 @@ export default function Home(): JSX.Element {
   } = useInfiniteQuery(
     'images',
     // TODO AXIOS REQUEST WITH PARAM
-    ({ pageParam = null }) => {
-      return axios.get(`api/images?after=${pageParam}`);
-    },
+    ({ pageParam = null }) =>
+      api
+        .get('api/images', {
+          params: { after: pageParam },
+        })
+        .then(response => response.data),
     // TODO GET AND RETURN NEXT PAGE PARAM
     {
-      getNextPageParam: (lastPage, pages) => lastPage.data,
+      getNextPageParam: lastPage => lastPage.after ?? false,
     }
   );
 
   const formattedData = useMemo(() => {
     // TODO FORMAT AND FLAT DATA ARRAY
-    return data.pages.map(image => {
-      console.log('formattedData:', image.data.flat());
-      return image.data.flat();
-    });
+    if (data) {
+      return data.pages.flatMap(page => page.data);
+    }
+    return null;
   }, [data]);
 
   // TODO RENDER LOADING SCREEN
