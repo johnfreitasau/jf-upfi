@@ -22,13 +22,13 @@ export function ModalViewImage({
 }: ModalViewImageProps): JSX.Element {
   // TODO MODAL WITH IMAGE AND EXTERNAL LINK
   return (
-    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal onClose={onClose} isOpen={isOpen} size="4xl" isCentered>
       <ModalOverlay />
       <ModalContent
         borderBottomRightRadius="6"
         borderBottomLeftRadius="6"
         overflow="hidden"
-        background="transparent"
+        background="gray.700"
       >
         <ModalBody>
           <ModalCloseButton />
