@@ -2,7 +2,6 @@ import { Box, Button, Stack, useToast } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-
 import { api } from '../../services/api';
 import { FileInput } from '../Input/FileInput';
 import { TextInput } from '../Input/TextInput';
@@ -10,6 +9,12 @@ import { TextInput } from '../Input/TextInput';
 interface FormAddImageProps {
   closeModal: () => void;
 }
+
+type ImageProps = {
+  title: string | unknown;
+  description: string | unknown;
+  url: string;
+};
 
 export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const [imageUrl, setImageUrl] = useState('');
@@ -19,6 +24,15 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const formValidations = {
     image: {
       // TODO REQUIRED, LESS THAN 10 MB AND ACCEPTED FORMATS VALIDATIONS
+      required: 'Arquivo obrigatório.',
+      validate: {
+        lessThan10MB: (image: File) =>
+          image[0]?.size < 10000 * 1024 || 'O arquivo deve ser menor que 10MB',
+        acceptedFormats: (image: File) =>
+          ['image/jpeg', 'image/png', 'image/gif'].includes(image[0]?.type) ||
+          'Somente são aceitos arquivos PNG, JPEG e GIF',
+        // /image\/(jpeg|png|gif)/.test(v[0].type)
+      },
     },
     title: {
       // TODO REQUIRED, MIN AND MAX LENGTH VALIDATIONS
@@ -43,17 +57,16 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   };
 
   const queryClient = useQueryClient();
+
   const mutation = useMutation(
     // TODO MUTATION API POST REQUEST,
-    async (data: ImageData) => {
-      const response = await api.post("api/images", {
-        user: {
-          ...data,
-          create_at: new Date(),
-        },
-      });
-
-      return response.data;
+    (image: ImageProps) => api.post('/api/images', image),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('images');
+      },
+    }
+  );
 
   const { register, handleSubmit, reset, formState, setError, trigger } =
     useForm();
@@ -64,7 +77,10 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       // TODO SHOW ERROR TOAST IF IMAGE URL DOES NOT EXISTS
       if (imageUrl) {
         toast({
-          title: 'Arquivo obrigatório',
+          // title: 'Arquivo obrigatório',
+          title: 'Imagem não adicionada',
+          description:
+            'É preciso adicionar e aguardar o upload de uma imagem antes de realizar o cadastro.',
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -72,12 +88,31 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       }
 
       // TODO EXECUTE ASYNC MUTATION
+      await mutation.mutateAsync(data as ImageProps);
 
       // TODO SHOW SUCCESS TOAST
+      toast({
+        title: 'Imagem cadastrada',
+        description: 'Imagem cadastrada.',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
     } catch {
       // TODO SHOW ERROR TOAST IF SUBMIT FAILED
+      toast({
+        title: 'Falha no cadastro',
+        description: 'Ocorreu um erro ao tentar cadastrar a sua imagem.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     } finally {
       // TODO CLEAN FORM, STATES AND CLOSE MODAL
+      setImageUrl('');
+      setLocalImageUrl('');
+      reset({ title: '', description: '' });
+      closeModal();
     }
   };
 
@@ -91,6 +126,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
           setError={setError}
           trigger={trigger}
           // TODO SEND IMAGE ERRORS
+          name="image"
+          error={errors?.image}
           // TODO REGISTER IMAGE INPUT WITH VALIDATIONS
           {...register('imageUrl', formValidations.image)}
         />
@@ -98,6 +135,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         <TextInput
           placeholder="Título da imagem..."
           // TODO SEND TITLE ERRORS
+          name="title"
+          error={errors?.title}
           // TODO REGISTER TITLE INPUT WITH VALIDATIONS
           {...register('title', formValidations.title)}
         />
@@ -105,6 +144,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         <TextInput
           placeholder="Descrição da imagem..."
           // TODO SEND DESCRIPTION ERRORS
+          name="description"
+          error={errors?.description}
           // TODO REGISTER DESCRIPTION INPUT WITH VALIDATIONS
           {...register('description', formValidations.description)}
         />
