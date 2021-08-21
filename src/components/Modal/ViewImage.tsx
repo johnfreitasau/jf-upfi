@@ -25,14 +25,23 @@ export function ModalViewImage({
     <Modal onClose={onClose} isOpen={isOpen} size="4xl" isCentered>
       <ModalOverlay />
       <ModalContent
-        borderBottomRightRadius="6"
-        borderBottomLeftRadius="6"
-        overflow="hidden"
-        background="gray.700"
+        mx="auto"
+        mb="2.5rem"
+        mt="2.5rem"
+        w="auto"
+        h="auto"
+        maxW={['320px', '540px', '900px']}
+        maxH={['360px', '440px', '600px']}
+        bg="transparent"
       >
-        <ModalBody>
+        <ModalBody p="0">
           <ModalCloseButton />
-          <Image src={imgUrl} alt={imgUrl} />
+          <Image
+            src={imgUrl}
+            alt={imgUrl}
+            maxW={['320px', '540px', '900px']}
+            maxH={['360px', '440px', '600px']}
+          />
         </ModalBody>
         <ModalFooter
           bgColor="pGray.800"

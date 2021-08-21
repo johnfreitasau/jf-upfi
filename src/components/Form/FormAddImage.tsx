@@ -75,9 +75,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const onSubmit = async (data: Record<string, unknown>): Promise<void> => {
     try {
       // TODO SHOW ERROR TOAST IF IMAGE URL DOES NOT EXISTS
-      if (imageUrl) {
+      if (!imageUrl) {
         toast({
-          // title: 'Arquivo obrigatório',
           title: 'Imagem não adicionada',
           description:
             'É preciso adicionar e aguardar o upload de uma imagem antes de realizar o cadastro.',
@@ -85,15 +84,25 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
           duration: 9000,
           isClosable: true,
         });
+
+        return;
       }
 
       // TODO EXECUTE ASYNC MUTATION
-      await mutation.mutateAsync(data as ImageProps);
+      const { title, description } = data;
+
+      const image = {
+        title,
+        description,
+        url: imageUrl,
+      };
+
+      await mutation.mutateAsync(image as ImageProps);
 
       // TODO SHOW SUCCESS TOAST
       toast({
         title: 'Imagem cadastrada',
-        description: 'Imagem cadastrada.',
+        description: 'Sua imagem foi cadastrada com sucesso.',
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -111,7 +120,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       // TODO CLEAN FORM, STATES AND CLOSE MODAL
       setImageUrl('');
       setLocalImageUrl('');
-      reset({ title: '', description: '' });
+      reset();
       closeModal();
     }
   };
@@ -129,7 +138,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
           name="image"
           error={errors?.image}
           // TODO REGISTER IMAGE INPUT WITH VALIDATIONS
-          {...register('imageUrl', formValidations.image)}
+          {...register('image', formValidations.image)}
         />
 
         <TextInput
