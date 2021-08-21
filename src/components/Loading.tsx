@@ -9,7 +9,7 @@ export function Loading(): JSX.Element {
       flexDir="column"
     >
       <Box>
-        <Heading>Carregando aplicação...</Heading>
+        <Heading>Loading the app...</Heading>
         <Progress
           mt={4}
           size="xs"

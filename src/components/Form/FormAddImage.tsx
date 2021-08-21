@@ -36,22 +36,22 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     },
     title: {
       // TODO REQUIRED, MIN AND MAX LENGTH VALIDATIONS
-      required: 'Título obrigatório',
+      required: 'Title is required',
       min: {
         value: 2,
-        message: 'Mínimo de 2 caracteres',
+        message: 'Minimum 2 characters',
       },
       max: {
         value: 20,
-        message: 'Máximo de 20 caracteres',
+        message: 'Maximum 20 characters',
       },
     },
     description: {
       // TODO REQUIRED, MAX LENGTH VALIDATIONS
-      required: 'Descrição obrigatória',
+      required: 'Description is required',
       max: {
         value: 65,
-        message: 'Descrição obrigatória',
+        message: 'Description is required',
       },
     },
   };
@@ -77,9 +77,9 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       // TODO SHOW ERROR TOAST IF IMAGE URL DOES NOT EXISTS
       if (!imageUrl) {
         toast({
-          title: 'Imagem não adicionada',
+          title: 'Image not added',
           description:
-            'É preciso adicionar e aguardar o upload de uma imagem antes de realizar o cadastro.',
+            'You must add and wait for an image to be uploaded before registering.',
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -101,8 +101,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
 
       // TODO SHOW SUCCESS TOAST
       toast({
-        title: 'Imagem cadastrada',
-        description: 'Sua imagem foi cadastrada com sucesso.',
+        title: 'Image registered',
+        description: 'Your image has been successfully registered.',
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -110,8 +110,8 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     } catch {
       // TODO SHOW ERROR TOAST IF SUBMIT FAILED
       toast({
-        title: 'Falha no cadastro',
-        description: 'Ocorreu um erro ao tentar cadastrar a sua imagem.',
+        title: 'Registration failure',
+        description: 'An error occurred while trying to register your image.',
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -142,7 +142,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         />
 
         <TextInput
-          placeholder="Título da imagem..."
+          placeholder="Image title..."
           // TODO SEND TITLE ERRORS
           name="title"
           error={errors?.title}
@@ -151,7 +151,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         />
 
         <TextInput
-          placeholder="Descrição da imagem..."
+          placeholder="Image description..."
           // TODO SEND DESCRIPTION ERRORS
           name="description"
           error={errors?.description}
@@ -168,7 +168,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         w="100%"
         py={6}
       >
-        Enviar
+        Submit
       </Button>
     </Box>
   );

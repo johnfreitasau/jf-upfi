@@ -8,9 +8,9 @@ export function Error(): JSX.Element {
       h="100vh"
       flexDir="column"
     >
-      <Heading>Infelizmente ocorreu um erro =(</Heading>
+      <Heading>Unfortunately an error occurred =(</Heading>
       <Button py={6} onClick={() => window.location.reload()} mt={4}>
-        Clique aqui para tentar novamente
+        Click here to try again
       </Button>
     </Flex>
   );

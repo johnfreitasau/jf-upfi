@@ -51,7 +51,7 @@ export function ModalViewImage({
         >
           {' '}
           <Link href={imgUrl} isExternal>
-            Abrir original
+            Open original
           </Link>
         </ModalFooter>
       </ModalContent>
